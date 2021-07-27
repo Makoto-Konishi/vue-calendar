@@ -8,7 +8,14 @@ const state = {
 };
 // getters stateの値を取り出す関数を定義する
 const getters = {
-  events: (state) => state.events,
+  events: state => state.events.map( event => {
+    return {
+      // 文字列からDate型に変換するために、eventの要素を全て展開して、startとend要素をnew Dateで上書きする
+      ...event,
+      start: new Date(event.start),
+      end: new Date(event.end),
+    }
+  }),
 };
 // mutations eventsデータをstateに保存する関数を定義する
 const mutations = {
