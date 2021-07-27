@@ -11,7 +11,7 @@ import Calendar from './components/Calendar.vue';
 export default {
   name: 'App',
   components: {
-    Calendar
-  }
+    Calendar,
+  },
 };
 </script>
