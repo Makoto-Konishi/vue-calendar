@@ -25,45 +25,7 @@
     </v-sheet>
     <!-- 1.初期状態ではダイアログが表示されず、予定をクリックした時にeventに値が代入されてダイアログが表示 -->
     <v-dialog :value="event !== null" @click:outside="closeDialog()" width="600">
-      <div v-if="event !== null">
-        <v-card class="pb-12">
-          <v-card-actions class="d-flex justify-end pa-2">
-            <v-btn icon @click="closeDialog()">
-              <v-icon size="20px">mdi-close</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-card-title>
-            <v-row>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <v-icon size="20px" :color="event.color||'blue'">mdi-square</v-icon>
-              </v-col>
-              <v-col class="d-flex align-center">
-                {{ event.name }}
-              </v-col>
-            </v-row>
-          </v-card-title>
-          <v-card-text>
-            <v-row>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <v-icon size="20px">mdi-clock-time-three-outline</v-icon>
-              </v-col>
-              <v-col class="d-flex align-center">
-                {{ event.start.toLocaleString() }} ~ {{ event.end.toLocaleString() }}
-              </v-col>
-            </v-row>
-          </v-card-text>
-          <v-card-text>
-            <v-row>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <v-icon size="20px">mdi-card-text-outline</v-icon>
-              </v-col>
-              <v-col class="d-flex align-center">
-                {{ event.description || 'no description' }}
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
-      </div>
+      <EventDetailDialog v-if="event !== null" />
     </v-dialog>
   </div>
 </template>
@@ -71,12 +33,16 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 import { format } from 'date-fns';
+import EventDetailDialog from './EventDetailDialog.vue';
 
 export default {
   name: 'Calendar',
   data: () => ({
     value: format(new Date(), 'yyyy/MM/dd'),
   }),
+  components: {
+    EventDetailDialog,
+  },
   computed: {
     ...mapGetters('events', ['events', 'event']),
     title() {
@@ -94,7 +60,7 @@ export default {
     },
     closeDialog() {
       this.setEventActions(null);
-    }
+    },
   },
 };
 </script>
