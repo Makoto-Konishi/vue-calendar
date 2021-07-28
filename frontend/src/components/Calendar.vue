@@ -11,7 +11,7 @@
       <v-toolbar-title>{{ title }}</v-toolbar-title>
     </v-sheet>
     <v-sheet height="94vh">
-      <!-- :events ="events" :eventsはnamespaceで、"events"はgetterから取得したもので、:eventsに代入している-->
+      <!-- :events ="events" :eventsはnamespaceで、"events"はgetterから取得したもので:eventsに代入している-->
       <v-calendar
         ref="calendar"
         v-model="value"
@@ -24,16 +24,44 @@
       ></v-calendar>
     </v-sheet>
     <!-- 1.初期状態ではダイアログが表示されず、予定をクリックした時にeventに値が代入されてダイアログが表示 -->
-    <v-dialog :value="event !== null">
+    <v-dialog :value="event !== null" width="600">
       <div v-if="event !== null">
-        <v-card>
-          <h1>イベント詳細</h1>
-          <p>name: {{ event.name }}</p>
-          <p>start: {{ event.start.toLocaleString() }}</p>
-          <p>end: {{ event.end.toLocaleString() }}</p>
-          <p>timed: {{ event.timed }}</p>
-          <p>description: {{ event.description }}</p>
-          <p>color: {{ event.color }}</p>
+        <v-card class="pb-12">
+          <v-card-actions class="d-flex justify-end pa-2">
+            <v-btn icon>
+              <v-icon size="20px">mdi-close</v-icon>
+            </v-btn>
+          </v-card-actions>
+          <v-card-title>
+            <v-row>
+              <v-col cols="2" class="d-flex justify-center align-center">
+                <v-icon size="20px" :color="event.color||'blue'">mdi-square</v-icon>
+              </v-col>
+              <v-col class="d-flex align-center">
+                {{ event.name }}
+              </v-col>
+            </v-row>
+          </v-card-title>
+          <v-card-text>
+            <v-row>
+              <v-col cols="2" class="d-flex justify-center align-center">
+                <v-icon size="20px">mdi-clock-time-three-outline</v-icon>
+              </v-col>
+              <v-col class="d-flex align-center">
+                {{ event.start.toLocaleString() }} ~ {{ event.end.toLocaleString() }}
+              </v-col>
+            </v-row>
+          </v-card-text>
+          <v-card-text>
+            <v-row>
+              <v-col cols="2" class="d-flex justify-center align-center">
+                <v-icon size="20px">mdi-card-text-outline</v-icon>
+              </v-col>
+              <v-col class="d-flex align-center">
+                {{ event.description || 'no description' }}
+              </v-col>
+            </v-row>
+          </v-card-text>
         </v-card>
       </div>
     </v-dialog>
