@@ -24,11 +24,11 @@
       ></v-calendar>
     </v-sheet>
     <!-- 1.初期状態ではダイアログが表示されず、予定をクリックした時にeventに値が代入されてダイアログが表示 -->
-    <v-dialog :value="event !== null" width="600">
+    <v-dialog :value="event !== null" @click:outside="closeDialog()" width="600">
       <div v-if="event !== null">
         <v-card class="pb-12">
           <v-card-actions class="d-flex justify-end pa-2">
-            <v-btn icon>
+            <v-btn icon @click="closeDialog()">
               <v-icon size="20px">mdi-close</v-icon>
             </v-btn>
           </v-card-actions>
@@ -92,6 +92,9 @@ export default {
       // 2.showEventが呼び出されたら、dialogにイベント名を代入
       this.setEventActions(event);
     },
+    closeDialog() {
+      this.setEventActions(null);
+    }
   },
 };
 </script>
