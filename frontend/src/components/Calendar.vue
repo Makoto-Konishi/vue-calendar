@@ -26,8 +26,8 @@
     </v-sheet>
     <!-- 1.初期状態ではダイアログが表示されず、予定をクリックした時にeventに値が代入されてダイアログが表示 -->
     <v-dialog :value="event !== null" @click:outside="closeDialog()" width="600">
-      <EventDetailDialog v-if="event !== null" />
-      <EventFormDialog v-if="event !== null" />
+      <EventDetailDialog v-if="event !== null && !isEditMode" />
+      <EventFormDialog v-if="event !== null && isEditMode" />
     </v-dialog>
   </div>
 </template>
@@ -48,31 +48,33 @@ export default {
     EventFormDialog,
   },
   computed: {
-    ...mapGetters('events', ['events', 'event']),
+    ...mapGetters('events', ['events', 'event', 'isEditMode']),
     title() {
       return format(new Date(this.value), 'yyyy年 M月');
     },
   },
   methods: {
-    ...mapActions('events', ['fetchEvents', 'setEventActions']),
+    ...mapActions('events', ['fetchEvents', 'setEventActions', 'setEditMode']),
     setToday() {
       this.value = format(new Date(), 'yyyy/MM/dd');
     },
     showEvent( {event, nativeEvent} ) {
       this.setEventActions(event);
-      console.log('showEvent');
       nativeEvent.stopPropagation();
     },
     closeDialog() {
       this.setEventActions(null);
+      // closeDialogをクリックしたら、isEditModeはfalseにする
+      this.setEditMode(false);
     },
     initEvent({ date}) {
       // gオプションは置き換えたい文字列を指定した時にその文字が複数含まれている場合に、その全てを置き換えるオプションです。
       date = date.replace(/-/g, '/');
-      console.log('initEvent');
       const start = format(new Date(date), 'yyyy/MM/dd 00:00:00')
       const end = format(new Date(date), 'yyyy/MM/dd 01:00:00')
       this.setEventActions({name: '', start, end, timed: true});
+      // initEventをクリックしたら、isEventModeをtrueにする
+      this.setEditMode(true);
     }
   },
 };
