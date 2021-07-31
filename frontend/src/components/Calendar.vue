@@ -18,6 +18,7 @@
         :events="events"
         @change="fetchEvents"
         @click:event="showEvent"
+        @click:day="initEvent"
         locale="ja-jp"
         :day-format="(timestamp) => new Date(timestamp.date).getDate()"
         :month-format="(timestamp) => new Date(timestamp.date).getMonth() + 1 + ' /'"
@@ -26,6 +27,7 @@
     <!-- 1.初期状態ではダイアログが表示されず、予定をクリックした時にeventに値が代入されてダイアログが表示 -->
     <v-dialog :value="event !== null" @click:outside="closeDialog()" width="600">
       <EventDetailDialog v-if="event !== null" />
+      <EventFormDialog v-if="event !== null" />
     </v-dialog>
   </div>
 </template>
@@ -34,6 +36,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import { format } from 'date-fns';
 import EventDetailDialog from './EventDetailDialog.vue';
+import EventFormDialog from './ EventFormDialog.vue';
 
 export default {
   name: 'Calendar',
@@ -42,6 +45,7 @@ export default {
   }),
   components: {
     EventDetailDialog,
+    EventFormDialog,
   },
   computed: {
     ...mapGetters('events', ['events', 'event']),
@@ -54,13 +58,22 @@ export default {
     setToday() {
       this.value = format(new Date(), 'yyyy/MM/dd');
     },
-    showEvent({ event }) {
-      // 2.showEventが呼び出されたら、dialogにイベント名を代入
+    showEvent( {event, nativeEvent} ) {
       this.setEventActions(event);
+      console.log('showEvent');
+      nativeEvent.stopPropagation();
     },
     closeDialog() {
       this.setEventActions(null);
     },
+    initEvent({ date}) {
+      // gオプションは置き換えたい文字列を指定した時にその文字が複数含まれている場合に、その全てを置き換えるオプションです。
+      date = date.replace(/-/g, '/');
+      console.log('initEvent');
+      const start = format(new Date(date), 'yyyy/MM/dd 00:00:00')
+      const end = format(new Date(date), 'yyyy/MM/dd 01:00:00')
+      this.setEventActions({name: '', start, end, timed: true});
+    }
   },
 };
 </script>
