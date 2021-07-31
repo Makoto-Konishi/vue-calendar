@@ -27,7 +27,7 @@ const getters = {
           end: new Date(state.event.end),
         }
       : null,
-  isEditMode: state => state.isEditMode,
+  isEditMode: (state) => state.isEditMode,
 };
 // mutations eventsデータをstateに保存する関数を定義する
 const mutations = {
@@ -39,13 +39,21 @@ const mutations = {
   },
   setEditMode: (state, bool) => {
     state.isEditMode = bool;
-  }
+  },
+  appendEvent: (state, event) => {
+    state.events = [...state.events, event];
+  },
 };
 // actions axiosでAPIリクエストを送信してeventsデータを取得し、mutationsを呼び出す関数を定義する
 const actions = {
   async fetchEvents({ commit }) {
     const response = await axios.get(`${apiUrl}/events`);
     commit('setEvents', response.data);
+  },
+  // APIにPOSTリクエストを送り、データベースに新しいイベントデータを登録する
+  async createEvent({ commit }, event) {
+    const response = await axios.post(`${apiUrl}/events`, event);
+    commit('appendEvent', response.data);
   },
   setEventActions({ commit }, event) {
     commit('setEventMutations', event);

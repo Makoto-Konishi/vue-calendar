@@ -58,7 +58,7 @@ export default {
     setToday() {
       this.value = format(new Date(), 'yyyy/MM/dd');
     },
-    showEvent( {event, nativeEvent} ) {
+    showEvent({ event, nativeEvent }) {
       this.setEventActions(event);
       nativeEvent.stopPropagation();
     },
@@ -67,15 +67,15 @@ export default {
       // closeDialogをクリックしたら、isEditModeはfalseにする
       this.setEditMode(false);
     },
-    initEvent({ date}) {
+    initEvent({ date }) {
       // gオプションは置き換えたい文字列を指定した時にその文字が複数含まれている場合に、その全てを置き換えるオプションです。
       date = date.replace(/-/g, '/');
-      const start = format(new Date(date), 'yyyy/MM/dd 00:00:00')
-      const end = format(new Date(date), 'yyyy/MM/dd 01:00:00')
-      this.setEventActions({name: '', start, end, timed: true});
+      const start = format(new Date(date), 'yyyy/MM/dd 00:00:00');
+      const end = format(new Date(date), 'yyyy/MM/dd 01:00:00');
+      this.setEventActions({ name: '', start, end, timed: true });
       // initEventをクリックしたら、isEventModeをtrueにする
       this.setEditMode(true);
-    }
+    },
   },
 };
 </script>
